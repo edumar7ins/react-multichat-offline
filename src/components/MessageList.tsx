@@ -4,9 +4,13 @@ import MessageBubble from './MessageBubble'
 
 type MessageListProps = {
   messages: Message[]
+  emptyMessage?: string
 }
 
-export default function MessageList({ messages }: MessageListProps) {
+export default function MessageList({
+  messages,
+  emptyMessage = 'Nenhuma mensagem ainda. Envie a primeira!',
+}: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -16,7 +20,7 @@ export default function MessageList({ messages }: MessageListProps) {
   if (messages.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center overflow-y-auto p-4 pb-6">
-        <p className="text-center text-stone-600">Nenhuma mensagem ainda. Envie a primeira!</p>
+        <p className="text-center text-muted">{emptyMessage}</p>
       </div>
     )
   }

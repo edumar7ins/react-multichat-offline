@@ -1,1 +1,95 @@
 @import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --app-background: #fffbeb;
+  --sidebar-background: #fff7ed;
+  --surface-background: #ffffff;
+  --surface-hover: #fef3c7;
+  --primary-text: #292524;
+  --muted-text: #57534e;
+  --theme-border: #e7d8c1;
+  --action-background: #92400e;
+  --action-hover: #78350f;
+  --focus-ring: #b45309;
+  --robot-text: #6b21a8;
+  --robot-hover: #faf5ff;
+  --texture-primary: rgb(217 119 6 / 7%);
+  --texture-secondary: rgb(180 83 9 / 5%);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --app-background: #0f172a;
+  --sidebar-background: #111c31;
+  --surface-background: #1e293b;
+  --surface-hover: #263750;
+  --primary-text: #e2e8f0;
+  --muted-text: #a8b6c9;
+  --theme-border: #334155;
+  --action-background: #1d4ed8;
+  --action-hover: #1e40af;
+  --focus-ring: #93c5fd;
+  --robot-text: #d8b4fe;
+  --robot-hover: #35204a;
+  --texture-primary: rgb(59 130 246 / 9%);
+  --texture-secondary: rgb(14 165 233 / 6%);
+}
+
+@layer utilities {
+  .bg-app {
+    background-color: var(--app-background);
+    background-image:
+      radial-gradient(ellipse at 12% 8%, var(--texture-primary), transparent 38%),
+      radial-gradient(ellipse at 88% 92%, var(--texture-secondary), transparent 42%);
+    background-attachment: fixed;
+  }
+
+  .bg-sidebar {
+    background-color: var(--sidebar-background);
+  }
+
+  .bg-surface {
+    background-color: var(--surface-background);
+  }
+
+  .bg-surface-hover {
+    background-color: var(--surface-hover);
+  }
+
+  .bg-action {
+    background-color: var(--action-background);
+  }
+
+  .hover\:bg-action-hover:hover {
+    background-color: var(--action-hover);
+  }
+
+  .text-primary {
+    color: var(--primary-text);
+  }
+
+  .text-muted {
+    color: var(--muted-text);
+  }
+
+  .text-robot {
+    color: var(--robot-text);
+  }
+
+  .hover\:bg-robot-hover:hover {
+    background-color: var(--robot-hover);
+  }
+
+  .border-theme {
+    border-color: var(--theme-border);
+  }
+
+  .focus-visible\:outline-theme:focus-visible {
+    outline-color: var(--focus-ring);
+  }
+
+  .placeholder-muted::placeholder {
+    color: var(--muted-text);
+  }
+}
