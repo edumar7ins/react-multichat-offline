@@ -1,91 +1,91 @@
-# Chat Offline
+# Multi-chat Offline
 
-Aplicação de chat em janela única onde o usuário envia mensagens alternando entre dois remetentes: **usuário** (alinhado à direita) e **robô** (alinhado à esquerda). O histórico vive apenas em memória (React state) — ao recarregar a página, as mensagens são perdidas.
+Aplicação de chat offline para criar e alternar entre várias conversas independentes. Cada conversa mantém seu histórico durante a sessão atual. Ao recarregar a página, as conversas são descartadas; a preferência de tema é mantida no navegador.
 
 ## Funcionalidades
 
-- **Histórico em memória** — mensagens ordenadas cronologicamente, sem persistência
-- **Dois remetentes** — toggle no input alterna quem envia a próxima mensagem (padrão: usuário)
-- **Layout responsivo** — container centralizado (`max-w-2xl`) em fundo marrom claro
-- **Input fixo no rodapé** — card branco permanece visível durante o scroll do histórico
-- **Textarea dinâmico** — altura ajusta conforme o conteúdo (mín. 1 linha, máx. ~6 linhas)
-- **Atalhos de teclado** — `Enter` envia; `Shift + Enter` insere quebra de linha
-- **Estado vazio** — mensagem indicativa quando não há mensagens
-- **Auto-scroll** — rola automaticamente para a última mensagem ao enviar
-- **Modo robô** — borda roxa no card de input quando o remetente ativo é o robô
+- **Múltiplas conversas** — crie conversas e alterne entre elas pelo sidebar; cada uma é identificada pelo próprio ID.
+- **Históricos independentes** — as mensagens ficam associadas à conversa em que foram enviadas.
+- **Estado inicial vazio** — a aplicação inicia sem conversa ativa e habilita o input após criar ou selecionar uma conversa.
+- **Dois remetentes** — alterne entre usuário e robô; mensagens do usuário aparecem à direita e as do robô à esquerda.
+- **Envio de mensagens** — `Enter` envia e `Shift + Enter` insere uma quebra de linha. Espaços no início são removidos ao enviar.
+- **Sidebar responsivo** — fixo à esquerda em telas maiores e retrátil pelo botão hamburger em dispositivos móveis.
+- **Temas Light e Dark** — paleta clara âmbar e paleta azul-escura, com preferência salva no navegador.
+- **Textura sutil** — gradientes de fundo suaves, ajustados à paleta de cada tema.
+- **Acessibilidade** — controles com rótulos acessíveis, foco visível, suporte a teclado e estados desabilitados.
 
-## Stack
+## Persistência
+
+| Informação | Comportamento |
+|---|---|
+| Conversas e mensagens | Mantidas em memória durante a sessão; descartadas ao recarregar |
+| Conversa ativa | Não restaurada ao recarregar |
+| Tema escolhido | Salvo no armazenamento local do navegador |
+
+## Tecnologias
 
 | Tecnologia | Uso |
 |---|---|
-| [Vite](https://vite.dev/) | Build e dev server |
-| [React 19](https://react.dev/) | UI e estado |
+| [Vite](https://vite.dev/) | Build e servidor de desenvolvimento |
+| [React 19](https://react.dev/) | Interface |
 | [TypeScript](https://www.typescriptlang.org/) | Tipagem estática |
 | [Tailwind CSS 4](https://tailwindcss.com/) | Estilização |
+| [Zustand](https://zustand.docs.pmnd.rs/) | Estado compartilhado e persistência da preferência de tema |
 | [Oxlint](https://oxc.rs/docs/guide/usage/linter) | Lint |
 
 ## Como executar
+
+Requer Node.js e npm.
 
 ```bash
 # Instalar dependências
 npm install
 
-# Servidor de desenvolvimento
+# Iniciar o servidor de desenvolvimento
 npm run dev
 
-# Build de produção
+# Executar o lint
+npm run lint
+
+# Criar o build de produção
 npm run build
 
-# Preview do build
+# Visualizar o build de produção
 npm run preview
-
-# Lint
-npm run lint
 ```
 
 ## Uso
 
-1. Digite uma mensagem no campo de texto na parte inferior da tela.
-2. Use o toggle à esquerda para alternar entre **Usuário** e **Robô** antes de enviar.
-3. Envie com `Enter` ou pelo botão à direita (desabilitado quando o campo está vazio).
-4. Mensagens do usuário aparecem alinhadas à direita; mensagens do robô, à esquerda.
+1. Selecione **Nova conversa** no sidebar para começar.
+2. Digite uma mensagem e envie pelo botão ou com `Enter`. Use `Shift + Enter` para quebrar a linha.
+3. Use o controle de remetente no campo de mensagem para alternar entre usuário e robô.
+4. Selecione outra conversa na lista para abrir seu histórico.
+5. Em telas pequenas, use o botão hamburger para abrir o menu de conversas.
+6. Use o controle no cabeçalho para alternar entre os temas Light e Dark.
 
 ## Estrutura do projeto
 
-```
+```text
 src/
-├── types/
-│   └── message.ts          # Sender, Message
 ├── components/
-│   ├── Chat.tsx            # Estado e orquestração do layout
-│   ├── MessageList.tsx     # Lista, estado vazio e auto-scroll
-│   ├── MessageBubble.tsx   # Bolha individual
-│   ├── ChatInput.tsx       # Card fixo: toggle + textarea + enviar
-│   └── SenderToggle.tsx    # Alternância usuário/robô
-├── App.tsx                 # Renderiza <Chat />
-└── index.css               # Import do Tailwind
+│   ├── Chat.tsx           # Layout principal e integração do chat
+│   ├── ChatInput.tsx      # Campo de mensagem, remetente e envio
+│   ├── ChatSidebar.tsx    # Criar e selecionar conversas; drawer mobile
+│   ├── MessageBubble.tsx  # Bolha de mensagem
+│   ├── MessageList.tsx    # Histórico, estado vazio e auto-scroll
+│   ├── SenderToggle.tsx   # Alternância entre usuário e robô
+│   └── ThemeToggle.tsx    # Alternância de tema
+├── stores/
+│   └── chatStore.ts       # Conversas em memória e preferência de tema
+├── types/
+│   ├── conversation.ts    # Tipo Conversation
+│   ├── message.ts         # Tipos Message e Sender
+│   └── theme.ts           # Tipo Theme
+├── App.tsx
+└── index.css              # Tailwind e tokens de tema/textura
 ```
 
-### Modelo de dados
+## Documentação da funcionalidade
 
-```ts
-type Sender = 'user' | 'robot'
-
-type Message = {
-  id: string
-  text: string
-  sender: Sender
-}
-```
-
-## Fora de escopo
-
-- Persistência (localStorage, backend, etc.)
-- Autenticação
-- Edição ou exclusão de mensagens
-- Horários, rótulos de remetente ou cabeçalho do chat
-- Markdown, anexos ou formatação rica (apenas texto plano)
-
-## Documentação
-
-Especificação completa do produto: [.docs/prd.md](.docs/prd.md)
+- [Brain dump](.docs/features/multi-chat/brain-dump.md)
+- [PRD e fases de implementação](.docs/features/multi-chat/prd.md)
